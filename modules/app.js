@@ -157,6 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.score-display').innerText = `${state.analysis.score}/100`;
             document.querySelector('.altitude-value').innerText = state.analysis.altitude.toUpperCase();
 
+            // Sync style dropdown
+            const styleSelect = document.getElementById('output-style');
+            if (styleSelect) styleSelect.value = state.preferredStyle;
+
             // Render component tags with data-key for interactivity
             componentList.innerHTML = Object.entries(state.analysis.components)
                 .map(([key, data]) => `
