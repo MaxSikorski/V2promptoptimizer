@@ -78,11 +78,24 @@
             </div>
 
             <div class="optimization-levels" style="margin-top: 2rem;">
-                <label>Optimization Level</label>
-                <div class="level-grid">
-                    <button class="level-btn" data-level="low">Low (Quick)</button>
-                    <button class="level-btn selected" data-level="medium">Standard</button>
-                    <button class="level-btn" data-level="high">High (Deep)</button>
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>Optimization Level</label>
+                        <div class="level-grid">
+                            <button class="level-btn" data-level="low">Low</button>
+                            <button class="level-btn selected" data-level="medium">Standard</button>
+                            <button class="level-btn" data-level="high">High</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Output Style</label>
+                        <select id="output-style" class="v2-select">
+                            <option value="markdown">Markdown (Auto)</option>
+                            <option value="json">Strict JSON</option>
+                            <option value="bullets">Bullet Points</option>
+                            <option value="prose">Professional Prose</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
