@@ -584,8 +584,15 @@ pre {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .metric-card {
@@ -633,12 +640,36 @@ pre {
     align-items: center;
     gap: 0.5rem;
     color: var(--text-secondary);
+    cursor: pointer;
+    /* INTERACTIVE INDICATOR */
+    transition: all 0.2s ease;
+}
+
+.component-tag:hover {
+    background: rgba(255, 255, 255, 0.08);
+    /* HOVER EFFECT */
+    transform: translateY(-1px);
 }
 
 .component-tag.present {
     border-color: var(--success-color);
     color: var(--text-primary);
     background: rgba(16, 185, 129, 0.1);
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    /* Ensures Back is Left, Action is Right */
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.v2-back-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    min-width: 120px;
 }
 
 .level-grid {
@@ -720,7 +751,9 @@ pre {
 }
 
 @media (max-width: 640px) {
-    .dashboard-grid, .diff-container {
+
+    .dashboard-grid,
+    .diff-container {
         grid-template-columns: 1fr;
     }
 }
