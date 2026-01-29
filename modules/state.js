@@ -9,6 +9,7 @@ export const store = {
         originalPrompt: '',
         optimizedPrompt: '',
         targetModel: 'claude',
+        preferredStyle: 'markdown', // NEW: Persists the dropdown value
         analysis: null,
         optimizationResult: null,
         theme: localStorage.getItem('prompt-theme') || 'dark'
