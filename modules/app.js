@@ -90,8 +90,22 @@ document.addEventListener('DOMContentLoaded', () => {
             store.setState({ analysis: report, step: 2 });
         });
 
-        document.getElementById('back-to-input').addEventListener('click', () => {
-            store.setState({ step: 1 });
+        // Global Back Button Logic
+        const goBack = () => {
+            const currentStep = store.state.step;
+            if (currentStep > 1) {
+                store.setState({ step: currentStep - 1 });
+            }
+        };
+
+        const backBtnAnalysis = document.getElementById('v2-back-btn-analysis');
+        if (backBtnAnalysis) backBtnAnalysis.addEventListener('click', goBack);
+
+        const backBtnResults = document.getElementById('v2-back-btn-results');
+        if (backBtnResults) backBtnResults.addEventListener('click', goBack);
+
+        document.getElementById('restart-btn')?.addEventListener('click', () => {
+            window.location.reload();
         });
 
         document.getElementById('optimize-btn').addEventListener('click', () => {
@@ -101,17 +115,35 @@ document.addEventListener('DOMContentLoaded', () => {
             store.setState({ optimizationResult: result, step: 3 });
         });
 
-        document.getElementById('restart-btn').addEventListener('click', () => {
-            window.location.reload();
-        });
-
+        // Copy button logic remains...
         document.getElementById('copy-v2-btn').addEventListener('click', () => {
             navigator.clipboard.writeText(store.state.optimizationResult.optimized);
             alert('Optimized prompt copied to clipboard!');
         });
+
+        // COMPONENT TOGGLE HANDLER (Delegation)
+        componentList.addEventListener('click', (e) => {
+            const tag = e.target.closest('.component-tag');
+            if (!tag) return;
+
+            const key = tag.dataset.key;
+            const currentAnalysis = store.state.analysis;
+
+            // Toggle state
+            currentAnalysis.components[key].present = !currentAnalysis.components[key].present;
+
+            // Re-render only the list (optimization: update state to trigger render)
+            store.setState({ analysis: { ...currentAnalysis } });
+        });
     }
 
     function render(state) {
+        // Step 1 Persistence: Ensure textarea matches state when returning
+        if (state.step === 1) {
+            promptInput.value = state.originalPrompt;
+            analyzeBtn.disabled = state.originalPrompt.trim().length < 5;
+        }
+
         // Toggle Views
         Object.keys(views).forEach(key => {
             views[key].classList.toggle('active',
@@ -125,10 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.score-display').innerText = `${state.analysis.score}/100`;
             document.querySelector('.altitude-value').innerText = state.analysis.altitude.toUpperCase();
 
-            // Render component tags
+            // Render component tags with data-key for interactivity
             componentList.innerHTML = Object.entries(state.analysis.components)
                 .map(([key, data]) => `
-                    <div class="component-tag ${data.present ? 'present' : ''}">
+                    <div class="component-tag ${data.present ? 'present' : ''}" data-key="${key}">
                         ${data.present ? '✓' : '○'} ${key.charAt(0).toUpperCase() + key.slice(1)}
                     </div>
                 `).join('');
