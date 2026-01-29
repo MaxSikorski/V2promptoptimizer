@@ -23,6 +23,22 @@ export class PromptAnalyzer {
     }
 
     /**
+     * Checks which components are present in the prompt.
+     * @returns {Object} Checklist of components found.
+     */
+    analyzeComponents() {
+        const results = {};
+        for (const [key, pattern] of Object.entries(this.patterns)) {
+            const matches = this.prompt.match(pattern);
+            results[key] = {
+                present: !!matches,
+                count: matches ? matches.length : 0
+            };
+        }
+        return results;
+    }
+
+    /**
      * Calculates an overall prompt score based on component density and structure.
      * @returns {number} Score from 0 to 100.
      */
