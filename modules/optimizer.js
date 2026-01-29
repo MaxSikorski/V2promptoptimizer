@@ -29,9 +29,12 @@ export class PromptOptimizer {
     /**
      * Runs the optimization pipeline based on the selected level.
      * @param {'low'|'medium'|'high'} level 
+     * @param {string} preferredStyle - markdown, json, bullets, prose
      * @returns {Object} { optimized, metrics, techniques }
      */
-    optimize(level = 'medium') {
+    optimize(level = 'medium', preferredStyle = 'markdown') {
+        this.preferredStyle = preferredStyle;
+
         let result = this.original;
 
         // 1. Core Transformations (Always applied)
@@ -70,12 +73,22 @@ export class PromptOptimizer {
         let footerBlocks = [];
         const components = this.analysis.components;
 
+        // Map preferredStyle to specific templates
+        const styleMap = {
+            json: "OUTPUT FORMAT:\nProvide the final output in valid RFC-8259 JSON format. Do not include markdown code blocks or preambles.",
+            bullets: "OUTPUT FORMAT:\nPresent the information as a clean, hierarchical list of bullet points.",
+            prose: "OUTPUT FORMAT:\nWrite in professional, flowing prose suitable for formal correspondence.",
+            markdown: this.templates.format
+        };
+
         // Check each component. If user says it's "Present" (Green) but it's not detected in the raw text pattern,
         // we architect a placeholder for it.
 
+        // --- NEW: Smart Role Inference ---
         if (components.role?.present && !text.match(/(?:act as|you are|expert)/gi)) {
-            headerBlocks.push(this.templates.role);
-            this.appliedTechniques.push('Role Injection');
+            const smartRole = this.detectExpertRole(text);
+            headerBlocks.push(`Act as a ${smartRole} with deep knowledge in this domain.`);
+            this.appliedTechniques.push('Contextual Role Inference');
         }
 
         if (components.context?.present && !text.toLowerCase().includes('context')) {
@@ -94,8 +107,9 @@ export class PromptOptimizer {
         }
 
         if (components.format?.present && !text.toLowerCase().includes('format')) {
-            footerBlocks.push(this.templates.format);
-            this.appliedTechniques.push('Output Formatting');
+            const formatTemplate = styleMap[this.preferredStyle] || styleMap.markdown;
+            footerBlocks.push(formatTemplate);
+            this.appliedTechniques.push(`Format Injection (${this.preferredStyle})`);
         }
 
         // Combine parts
@@ -105,6 +119,34 @@ export class PromptOptimizer {
         if (footerBlocks.length > 0) final += '\n\n---\n\n' + footerBlocks.join('\n\n');
 
         return final;
+    }
+
+    /**
+     * Infers a professional role based on keyword density.
+     */
+    detectExpertRole(text) {
+        const lower = text.toLowerCase();
+        const roleMap = [
+            { role: "Senior Software Engineer", keywords: ['code', 'app', 'bug', 'react', 'function', 'develop', 'script', 'python', 'javascript'] },
+            { role: "Conversion-Focused Marketing Strategist", keywords: ['marketing', 'landing page', 'sales', 'ad', 'conversion', 'campaign', 'brand'] },
+            { role: "Senior Copywriter & Communications Expert", keywords: ['write', 'email', 'blog', 'article', 'prose', 'letter', 'tone'] },
+            { role: "Data Science & Analysis Specialist", keywords: ['data', 'analyze', 'science', 'spreadsheet', 'graph', 'json', 'csv', 'sql'] },
+            { role: "Strategic Legal & Compliance Consultant", keywords: ['legal', 'contract', 'terms', 'privacy', 'agreement', 'clause'] },
+            { role: "Full-Stack UI/UX Designer", keywords: ['pretty', 'beautiful', 'ui', 'ux', 'design', 'layout', 'graphic', 'visual'] }
+        ];
+
+        let bestMatch = "Senior Subject Matter Expert";
+        let maxScore = 0;
+
+        roleMap.forEach(item => {
+            const score = item.keywords.reduce((acc, kw) => acc + (lower.includes(kw) ? 1 : 0), 0);
+            if (score > maxScore) {
+                maxScore = score;
+                bestMatch = item.role;
+            }
+        });
+
+        return bestMatch;
     }
 
     /**
