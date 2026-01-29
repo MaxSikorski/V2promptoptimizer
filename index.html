@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Optimizer | 2026 Edition</title>
+    <meta name="description"
+        content="A premium prompt optimizer for Claude 4.5, GPT-5, and Gemini 3. Optimize your AI interactions with a constraint-first approach.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.400.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+
+    <main class="app-container">
+        <div class="top-controls">
+            <button id="theme-toggle" class="control-btn" title="Toggle Theme">
+                <i data-lucide="sun" id="theme-icon"></i>
+            </button>
+            <button id="info-btn" class="control-btn" title="Information">
+                <i data-lucide="info"></i>
+            </button>
+        </div>
+        <!-- V2 Navigation / Mode Selection (Simplified for MVP) -->
+        <div id="v2-header" style="text-align: center; margin-bottom: 2rem;">
+            <h1>Frontier Prompt Optimizer <span class="badge">V2</span></h1>
+            <p class="subtitle">2026 Reasoning Assistant</p>
+        </div>
+
+        <!-- VIEW 1: INPUT & SELECTION -->
+        <section id="view-input" class="view-container active">
+            <div class="model-grid">
+                <div class="model-card selected" data-model="claude">
+                    <span class="model-name">Claude 4.5</span>
+                    <span class="model-version">Anthropic</span>
+                </div>
+                <div class="model-card" data-model="gpt">
+                    <span class="model-name">GPT-5</span>
+                    <span class="model-version">OpenAI</span>
+                </div>
+                <div class="model-card" data-model="gemini">
+                    <span class="model-name">Gemini 3</span>
+                    <span class="model-version">Google</span>
+                </div>
+            </div>
+
+            <label>Paste your existing prompt</label>
+            <textarea id="prompt-input" placeholder="Paste what you've been using..."></textarea>
+
+            <div class="action-bar">
+                <button id="analyze-btn" class="btn-primary" disabled>Analyze Prompt →</button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: ANALYSIS DASHBOARD -->
+        <section id="view-analysis" class="view-container">
+            <div class="dashboard-grid">
+                <div id="score-card" class="metric-card">
+                    <label>Quality Score</label>
+                    <div class="score-display">0/100</div>
+                </div>
+                <div id="altitude-card" class="metric-card">
+                    <label>Altitude</label>
+                    <div class="altitude-value">Checking...</div>
+                </div>
+            </div>
+
+            <div class="component-list" id="component-checklist">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="optimization-levels" style="margin-top: 2rem;">
+                <label>Optimization Level</label>
+                <div class="level-grid">
+                    <button class="level-btn" data-level="low">Low (Quick)</button>
+                    <button class="level-btn selected" data-level="medium">Standard</button>
+                    <button class="level-btn" data-level="high">High (Deep)</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="back-to-input" class="btn-secondary">Edit Input</button>
+                <button id="optimize-btn" class="btn-primary">Optimize & Architect →</button>
+            </div>
+        </section>
+
+        <!-- VIEW 3: RESULTS & DIFF -->
+        <section id="view-results" class="view-container">
+            <div class="efficiency-banner">
+                <span id="efficiency-value">0%</span> Reduction in Noise
+            </div>
+
+            <div class="diff-container">
+                <div class="diff-lane">
+                    <label>Original</label>
+                    <div id="original-display" class="prompt-box"></div>
+                </div>
+                <div class="diff-lane">
+                    <label>Optimized (V2)</label>
+                    <div id="optimized-display" class="prompt-box highlighted"></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="restart-btn" class="btn-secondary">Start Over</button>
+                <button id="copy-v2-btn" class="btn-primary">Copy Optimized Prompt</button>
+            </div>
+        </section>
+
+        <!-- Info Modal -->
+        <div id="info-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;">Prompt Optimizer V2</h3>
+                <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    This version features the 2026 Engine, utilizing the 10-point Analysis framework and Model-Specific
+                    Adapters.
+                </p>
+                <a href="https://github.com/MaxSikorski/prompt-optimizer" target="_blank" class="github-link">
+                    <i data-lucide="github"></i> Repository
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- V2 Application Logic -->
+    <script type="module" src="modules/app.js"></script>
+</body>
+
+</html>
